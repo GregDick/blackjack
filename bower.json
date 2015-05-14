@@ -1,0 +1,17 @@
+{
+  "name": "blackjack",
+  "version": "1.0.0",
+  "homepage": "https://github.com/GregDick/blackjack",
+  "authors": [
+    "Greg Dick <gregory.j.dick@vanderbilt.edu>"
+  ],
+  "main": "index.html",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
