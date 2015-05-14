@@ -1,0 +1,11 @@
+.container{
+	background-image: url(http://fc07.deviantart.net/fs40/f/2009/037/5/a/well_worn_outdoor_poker_table_by_N3X_.jpg)
+}
+h1{
+	text-align: center;
+	margin: 100px auto;
+	background: black;
+	color: white;
+	border: gold 5px dashed;
+	border-radius: 5px;
+}
