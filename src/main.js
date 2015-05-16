@@ -17,6 +17,7 @@ var num = 0;
 
 $newGame.on('click', function(){
 	newDecks(6);
+	$(".deal").removeAttr("disabled");
 });
 
 $(".deal").on('click', function(){
@@ -41,6 +42,8 @@ $(".dealer-stay").on('click', function(){
 $(".player-stay").on('click', function(){
 	playerStay = true;
 	$dealerScoreBoard.show();
+	var $hiddenCard = $(".dealer .card-space img:first");
+	$hiddenCard.attr("src", replace);
 	check("player");
 });
 
@@ -49,12 +52,15 @@ $(".player-stay").on('click', function(){
 function newDecks(deck_count){
 	 var link = API_URL + deck_count;
 	getJSON(link, function(data){
+		$(".head div").remove();
 		$dealer.empty();
 		dealerScore.length = 0;
+		dealerStay = false;
 		addScore("dealer");
 		$dealerScoreBoard.hide();
 		$player.empty();
 		playerScore.length = 0;
+		playerStay = false;
 		addScore("player");
 		deck_id = data.deck_id;
 	});
@@ -80,9 +86,11 @@ function addHand(who, card){
 	var $target = $("." + who + " div");
 	if(who==="dealer" && dealerScore.length===0){
 		$target.append("<img src="+ back +"></img>");
+		replace = card.image;
 	}
 	else{
-		$target.append("<img src="+ card.image +"></img>");
+		var card = card.image==="http://deckofcardsapi.com/static/img/AD.png" ? "/img/aceDiamond.png" : card.image
+		$target.append("<img src="+ card +"></img>");
 	}
 }
 
@@ -113,24 +121,26 @@ function addScore(who){
 
 //checks to see if someone wins or busts
 function check(who){
+	var $target = $(".head");
 	var score = who === "dealer" ? dealerScore : playerScore;
 	var other = who === "dealer" ? "player" : "dealer";
 	if(_.sum(score) > 21){
 		if(score.indexOf(11)=== -1){
-			alert(who + " bust... "+  other +" wins!");
+			$target.append("<div class='h1'>" + who + " bust... "+  other +" wins!</div>");
+			$(".deal").attr("disabled", "disabled");
 		}else{
 			var where = score.indexOf(11);
 			score.splice(where, 1, 1);
 			addScore(who);
 		}
 	} else if(_.sum(score) === 21){
-		alert("BLACKJACK! " + who + " wins!");
+		$target.append("<div class='h1'>BLACKJACK! " + who + " wins!</div>");
+		$(".deal").attr("disabled", "disabled");
 	} else if(dealerStay===true && playerStay===true){
-		var winner = _.sum(playerScore) >= _.sum(dealerScore) ? "player" : "dealer";
-		console.log("p ="+_.sum(playerScore));
-		console.log("d="+_.sum(dealerScore));
-		alert("Both players stay... " + winner + " wins!");
-	}
+		var winner = _.sum(dealerScore) >= _.sum(playerScore) ? "Dealer" : "Player";
+		$target.append("<div class='h1'>Both players stay... " + winner + " wins!</div>");
+		$(".deal").attr("disabled", "disabled");
+	} else {}
 }
 
 
