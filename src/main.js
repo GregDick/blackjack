@@ -1,17 +1,19 @@
 var API_URL = "http://deckofcardsapi.com/api/shuffle/?deck_count=";
 var DRAW_URL = "http://deckofcardsapi.com/api/draw/";
+var back = "http://fc09.deviantart.net/fs71/f/2010/128/8/4/84e41dc8cec4d2f388ca9c1a96d4de46.jpg";
 var deck_id;
 
 var $newGame = $(".new-game");
 var $dealer = $(".dealer div");
 var $player = $(".player div");
-var $dealerHit = $(".dealer-hit");
-var $playerHit = $(".player-hit");
 
 var dealerScore = [];
 var playerScore = [];
+var dealerStay = false;
+var playerStay = false;
+var $dealerScoreBoard = $(".dealer span");
 var num = 0;
-var back = "http://fc09.deviantart.net/fs71/f/2010/128/8/4/84e41dc8cec4d2f388ca9c1a96d4de46.jpg"
+
 
 $newGame.on('click', function(){
 	newDecks(6);
@@ -23,12 +25,23 @@ $(".deal").on('click', function(){
 	drawCards(2, "player");
 });
 
-$dealerHit.on('click', function(){
+$(".dealer-hit").on('click', function(){
 	drawCards(1, "dealer");
 });
 
-$playerHit.on('click', function(){
+$(".player-hit").on('click', function(){
 	drawCards(1, "player");
+});
+
+$(".dealer-stay").on('click', function(){
+	dealerStay = true;
+	check("dealer");
+});
+
+$(".player-stay").on('click', function(){
+	playerStay = true;
+	$dealerScoreBoard.show();
+	check("player");
 });
 
 
@@ -39,6 +52,7 @@ function newDecks(deck_count){
 		$dealer.empty();
 		dealerScore.length = 0;
 		addScore("dealer");
+		$dealerScoreBoard.hide();
 		$player.empty();
 		playerScore.length = 0;
 		addScore("player");
@@ -55,7 +69,6 @@ function drawCards(card_count, who){
 			addHand(who, card);
 			sum(who, card);
 			addScore(who);
-			console.log(card.value);
 			check(who);
 		});
 	});
@@ -83,7 +96,6 @@ function sum(who, card){
 		break;
 		default: num = parseInt(card.value);
 	}
-	console.log("num = "+num)
 	if(who === "dealer"){
 		dealerScore.push(num);
 	}else{
@@ -112,8 +124,13 @@ function check(who){
 			addScore(who);
 		}
 	} else if(_.sum(score) === 21){
-		alert("BLACKJACK! " + who + " wins");
-	} else{}
+		alert("BLACKJACK! " + who + " wins!");
+	} else if(dealerStay===true && playerStay===true){
+		var winner = _.sum(playerScore) >= _.sum(dealerScore) ? "player" : "dealer";
+		console.log("p ="+_.sum(playerScore));
+		console.log("d="+_.sum(dealerScore));
+		alert("Both players stay... " + winner + " wins!");
+	}
 }
 
 

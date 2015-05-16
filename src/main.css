@@ -2,11 +2,11 @@ body{
 	background: saddlebrown;
 }
 .container{
-	background-image: url(http://fc07.deviantart.net/fs40/f/2009/037/5/a/well_worn_outdoor_poker_table_by_N3X_.jpg)
+	background-image: url(/img/blackjack-background.jpg);
 }
 
-.new-game, .deal, .dealer-hit, .player-hit{
-	margin: auto;
+.new-game, .deal, .dealer-hit, .player-hit, .dealer-stay, .player-stay{
+	margin-right: 15px;
 	background: saddlebrown;
 	color: white;
 	font-size: 1.5em;
