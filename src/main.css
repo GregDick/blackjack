@@ -1,9 +1,21 @@
+body{
+	background: saddlebrown;
+}
 .container{
 	background-image: url(http://fc07.deviantart.net/fs40/f/2009/037/5/a/well_worn_outdoor_poker_table_by_N3X_.jpg)
 }
+
+.new-game, .deal, .dealer-hit, .player-hit{
+	margin: auto;
+	background: saddlebrown;
+	color: white;
+	font-size: 1.5em;
+}
+
+
 h1{
 	text-align: center;
-	margin: 100px auto;
+	margin: 100px auto 20px;
 	background: black;
 	color: white;
 	border: gold 5px dashed;
@@ -14,6 +26,9 @@ h1{
 	color: white;
 }
 
+.card-space{
+	min-height: 135px;
+}
 
 img{
 	float: left;

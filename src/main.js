@@ -8,22 +8,28 @@ var $player = $(".player div");
 var $dealerHit = $(".dealer-hit");
 var $playerHit = $(".player-hit");
 
+var dealerScore = [];
+var playerScore = [];
 var num = 0;
-var dealerScore = 0;
-var playerScore = 0;
-
+var back = "http://fc09.deviantart.net/fs71/f/2010/128/8/4/84e41dc8cec4d2f388ca9c1a96d4de46.jpg"
 
 $newGame.on('click', function(){
 	newDecks(6);
-})
+});
+
+$(".deal").on('click', function(){
+	drawCards(1, "dealer");
+	drawCards(1, "dealer");
+	drawCards(2, "player");
+});
 
 $dealerHit.on('click', function(){
-	drawCards(1, $dealer);
-})
+	drawCards(1, "dealer");
+});
 
 $playerHit.on('click', function(){
-	drawCards(1, $player);
-})
+	drawCards(1, "player");
+});
 
 
 //creates new decks
@@ -31,7 +37,11 @@ function newDecks(deck_count){
 	 var link = API_URL + deck_count;
 	getJSON(link, function(data){
 		$dealer.empty();
+		dealerScore.length = 0;
+		addScore("dealer");
 		$player.empty();
+		playerScore.length = 0;
+		addScore("player");
 		deck_id = data.deck_id;
 	});
 }
@@ -44,47 +54,65 @@ function drawCards(card_count, who){
 		data.cards.forEach(function(card){
 			addHand(who, card);
 			sum(who, card);
-			console.log(dealerScore);
-			console.log(playerScore);
-			check();
-		})
-	})
+			addScore(who);
+			console.log(card.value);
+			check(who);
+		});
+	});
 }
 
 
 //appends cards to player or dealer hand
 function addHand(who, card){
-var $target = $(who);
-$target.append("<img src="+ card.image +"></img>");
+	var $target = $("." + who + " div");
+	if(who==="dealer" && dealerScore.length===0){
+		$target.append("<img src="+ back +"></img>");
+	}
+	else{
+		$target.append("<img src="+ card.image +"></img>");
+	}
 }
 
-
+//calculates dealer and player score
 function sum(who, card){
 	switch(card.value.length){
+		case 5:
 		case 4: num = 10;
 		break;
 		case 3: num = 11;
 		break;
 		default: num = parseInt(card.value);
 	}
-	if(who === $dealer){
-		dealerScore += num;
+	console.log("num = "+num)
+	if(who === "dealer"){
+		dealerScore.push(num);
 	}else{
-		playerScore += num;
+		playerScore.push(num);
 	}
 }
 
-function check(){
-	if(dealerScore > 21){
-		alert("Dealer bust... Players wins!");
-	} else if(dealerScore === 21){
-		alert("dealer wins");
-	} else{}
 
-	if(playerScore > 21){
-		alert("player bust");
-	} else if(playerScore === 21){
-		alert("player wins");
+//appends score to page
+function addScore(who){
+	var $scoreBoard = $("."+ who +" span");
+	var score = who === "dealer" ? _.sum(dealerScore) : _.sum(playerScore);
+	$scoreBoard.html(score);
+}
+
+//checks to see if someone wins or busts
+function check(who){
+	var score = who === "dealer" ? dealerScore : playerScore;
+	var other = who === "dealer" ? "player" : "dealer";
+	if(_.sum(score) > 21){
+		if(score.indexOf(11)=== -1){
+			alert(who + " bust... "+  other +" wins!");
+		}else{
+			var where = score.indexOf(11);
+			score.splice(where, 1, 1);
+			addScore(who);
+		}
+	} else if(_.sum(score) === 21){
+		alert("BLACKJACK! " + who + " wins");
 	} else{}
 }
 
