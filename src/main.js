@@ -14,29 +14,20 @@ var playerStay = false;
 var $dealerScoreBoard = $(".dealer span");
 var num = 0;
 
-
+/*------functions for button clicks------*/
 $newGame.on('click', function(){
 	newDecks(6);
-	$(".deal").removeAttr("disabled");
+	resetGame();
 });
 
 $(".deal").on('click', function(){
-	drawCards(1, "dealer");
-	drawCards(1, "dealer");
-	drawCards(2, "player");
-});
-
-$(".dealer-hit").on('click', function(){
-	drawCards(1, "dealer");
+	drawCards(1, "dealer", wat);
+	drawCards(1, "dealer", wat);
+	drawCards(2, "player", wat);
 });
 
 $(".player-hit").on('click', function(){
-	drawCards(1, "player");
-});
-
-$(".dealer-stay").on('click', function(){
-	dealerStay = true;
-	check("dealer");
+	drawCards(1, "player", wat);
 });
 
 $(".player-stay").on('click', function(){
@@ -44,32 +35,50 @@ $(".player-stay").on('click', function(){
 	$dealerScoreBoard.show();
 	var $hiddenCard = $(".dealer .card-space img:first");
 	$hiddenCard.attr("src", replace);
-	check("player");
+	autoDealer();
 });
 
+
+//automates dealer play
+function autoDealer(){
+	if(_.sum(dealerScore) < 17) {
+		drawCards(1, "dealer", autoDealer);
+	} else{
+	dealerStay = true;
+	check("dealer");
+	}
+}
+
+//literally does nothing cause javascript is weird
+function wat(){}
+
+//resets game variables
+function resetGame(){
+	$(".deal").removeAttr("disabled");
+	$(".head div").remove();
+	$dealer.empty();
+	dealerScore.length = 0;
+	dealerStay = false;
+	addScore("dealer");
+	$dealerScoreBoard.hide();
+	$player.empty();
+	playerScore.length = 0;
+	playerStay = false;
+	addScore("player");
+}
 
 //creates new decks
 function newDecks(deck_count){
 	 var link = API_URL + deck_count;
 	getJSON(link, function(data){
-		$(".head div").remove();
-		$dealer.empty();
-		dealerScore.length = 0;
-		dealerStay = false;
-		addScore("dealer");
-		$dealerScoreBoard.hide();
-		$player.empty();
-		playerScore.length = 0;
-		playerStay = false;
-		addScore("player");
 		deck_id = data.deck_id;
 	});
 }
 
 
 //draws cards from deck
-function drawCards(card_count, who){
-	 var address = DRAW_URL + deck_id + "/?count=" + card_count;
+function drawCards(card_count, who, callback){
+	var address = DRAW_URL + deck_id + "/?count=" + card_count;
 	getJSON(address, function(data){
 		data.cards.forEach(function(card){
 			addHand(who, card);
@@ -77,6 +86,7 @@ function drawCards(card_count, who){
 			addScore(who);
 			check(who);
 		});
+		callback();
 	});
 }
 
@@ -125,6 +135,7 @@ function check(who){
 	var score = who === "dealer" ? dealerScore : playerScore;
 	var other = who === "dealer" ? "player" : "dealer";
 	if(_.sum(score) > 21){
+		//change Ace value 11 to 1
 		if(score.indexOf(11)=== -1){
 			$target.append("<div class='h1'>" + who + " bust... "+  other +" wins!</div>");
 			$(".deal").attr("disabled", "disabled");
@@ -145,9 +156,8 @@ function check(who){
 
 
 function getJSON(url, cb) {
-	JSONP_PROXY = 'https://jsonp.afeld.me/?url='
+	JSONP_PROXY = 'https://jsonp.afeld.me/?url=';
 	 // THIS WILL ADD THE CROSS ORIGIN HEADERS
-	 
 	var request = new XMLHttpRequest();
 	 
 	request.open('GET', JSONP_PROXY + url);
@@ -155,7 +165,7 @@ function getJSON(url, cb) {
 	request.onload = function() {
 	  if (request.status >= 200 && request.status < 400) {
 	    cb(JSON.parse(request.responseText));
-	  } 
+	  }else{console.log("fail");}
 	};
 
    request.send();

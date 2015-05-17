@@ -33,5 +33,7 @@ h1, .h1{
 img{
 	float: left;
 	margin: 20px;
-	max-width: 125px;
+	max-height: 173px;
+	min-width: 124px;
+	border-radius: 5px;
 }
