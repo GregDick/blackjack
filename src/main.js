@@ -24,12 +24,12 @@ $newGame.on('click', function(){
 $(".deal").on('click', function(){
 	drawCards(1, "dealer", wat);
 	drawCards(1, "dealer", wat);
-	drawCards(2, "player", wat);
+	drawCards(2, "player", check);
 	$(".deal").attr("disabled", "disabled");
 });
 
 $(".player-hit").on('click', function(){
-	drawCards(1, "player", wat);
+	drawCards(1, "player", check);
 });
 
 $(".player-stay").on('click', function(){
@@ -85,7 +85,7 @@ function drawCards(card_count, who, callback){
 			addHand(who, card);
 			sum(who, card);
 			addScore(who);
-			check();
+			// check();
 		});
 		callback();
 	});
@@ -95,12 +95,12 @@ function drawCards(card_count, who, callback){
 //appends cards to player or dealer hand
 function addHand(who, card){
 	var $target = $("." + who + " div");
+	var card = card.image==="http://deckofcardsapi.com/static/img/AD.png" ? "/img/aceDiamond.png" : card.image
 	if(who==="dealer" && dealerScore.length===0){
 		$target.append("<img src="+ back +"></img>");
-		replace = card.image;
+		replace = card
 	}
 	else{
-		var card = card.image==="http://deckofcardsapi.com/static/img/AD.png" ? "/img/aceDiamond.png" : card.image
 		$target.append("<img src="+ card +"></img>");
 	}
 	$hiddenCard = $(".dealer .card-space img:first");
