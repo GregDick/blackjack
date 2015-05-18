@@ -7,6 +7,7 @@ var $newGame = $(".new-game");
 var $dealer = $(".dealer div");
 var $player = $(".player div");
 
+
 var dealerScore = [];
 var playerScore = [];
 var dealerStay = false;
@@ -24,6 +25,7 @@ $(".deal").on('click', function(){
 	drawCards(1, "dealer", wat);
 	drawCards(1, "dealer", wat);
 	drawCards(2, "player", wat);
+	$(".deal").attr("disabled", "disabled");
 });
 
 $(".player-hit").on('click', function(){
@@ -33,7 +35,6 @@ $(".player-hit").on('click', function(){
 $(".player-stay").on('click', function(){
 	playerStay = true;
 	$dealerScoreBoard.show();
-	var $hiddenCard = $(".dealer .card-space img:first");
 	$hiddenCard.attr("src", replace);
 	autoDealer();
 });
@@ -45,7 +46,7 @@ function autoDealer(){
 		drawCards(1, "dealer", autoDealer);
 	} else{
 	dealerStay = true;
-	check("dealer");
+	check();
 	}
 }
 
@@ -84,7 +85,7 @@ function drawCards(card_count, who, callback){
 			addHand(who, card);
 			sum(who, card);
 			addScore(who);
-			check(who);
+			check();
 		});
 		callback();
 	});
@@ -102,6 +103,7 @@ function addHand(who, card){
 		var card = card.image==="http://deckofcardsapi.com/static/img/AD.png" ? "/img/aceDiamond.png" : card.image
 		$target.append("<img src="+ card +"></img>");
 	}
+	$hiddenCard = $(".dealer .card-space img:first");
 }
 
 //calculates dealer and player score
@@ -130,29 +132,74 @@ function addScore(who){
 }
 
 //checks to see if someone wins or busts
-function check(who){
+function check(){
 	var $target = $(".head");
-	var score = who === "dealer" ? dealerScore : playerScore;
-	var other = who === "dealer" ? "player" : "dealer";
-	if(_.sum(score) > 21){
-		//change Ace value 11 to 1
-		if(score.indexOf(11)=== -1){
-			$target.append("<div class='h1'>" + who + " bust... "+  other +" wins!</div>");
-			$(".deal").attr("disabled", "disabled");
+	var sumDealer = _.sum(dealerScore);
+	var sumPlayer = _.sum(playerScore);
+	if(sumDealer > 21){
+		//check for ace and convert to 1 if ace is present
+		var where = dealerScore.indexOf(11);
+		if(where === -1){
+			$target.append("<div class='h1'>Dealer bust... Player wins!</div>");
 		}else{
-			var where = score.indexOf(11);
-			score.splice(where, 1, 1);
-			addScore(who);
+			dealerScore.splice(where, 1, 1);
+ 			addScore("dealer");
+ 			autoDealer();
 		}
-	} else if(_.sum(score) === 21){
-		$target.append("<div class='h1'>BLACKJACK! " + who + " wins!</div>");
-		$(".deal").attr("disabled", "disabled");
+	} else if(sumPlayer > 21){
+		//check for ace and convert to 1 if ace is present
+		var where = playerScore.indexOf(11);
+		if(where === -1){
+			$target.append("<div class='h1'>Player bust... Dealer wins!</div>");
+			$hiddenCard.attr("src", replace);
+		}else{
+			playerScore.splice(where, 1, 1);
+ 			addScore("player");
+		}
+	} else if(sumDealer===21 && sumPlayer===21){
+		//add function to check to see who has the realest blackjack
+		$target.append("<div class='h1'>BLACKJACK tie! Dealer wins!</div>");
+		$hiddenCard.attr("src", replace);
+	} else if(sumPlayer===21){
+		$target.append("<div class='h1'>BLACKJACK! Player wins!</div>");
+		$hiddenCard.attr("src", replace);
+	} else if(sumDealer===21 && playerStay===true){
+		$target.append("<div class='h1'>BLACKJACK! Dealer wins!</div>");
 	} else if(dealerStay===true && playerStay===true){
-		var winner = _.sum(dealerScore) >= _.sum(playerScore) ? "Dealer" : "Player";
-		$target.append("<div class='h1'>Both players stay... " + winner + " wins!</div>");
-		$(".deal").attr("disabled", "disabled");
-	} else {}
+		var winner = sumDealer >= sumPlayer ? "Dealer" : "Player";
+ 		$target.append("<div class='h1'>Both players stay... " + winner + " wins!</div>");
+	} else{}
 }
+
+
+
+
+
+// function check(){
+// 	var $target = $(".head");
+// 	var score = who === "dealer" ? dealerScore : playerScore;
+// 	var other = who === "dealer" ? "player" : "dealer";
+// 	if(_.sum(score) > 21){
+// 		$hiddenCard.attr("src", replace);
+// 		//change Ace value 11 to 1
+// 		if(score.indexOf(11)=== -1){
+// 			$target.append("<div class='h1'>" + who + " bust... "+  other +" wins!</div>");
+// 			$(".deal").attr("disabled", "disabled");
+// 		}else{
+// 			var where = score.indexOf(11);
+// 			score.splice(where, 1, 1);
+// 			addScore(who);
+// 			check(who);
+// 		}
+// 	} else if(_.sum(score) === 21){
+// 		$target.append("<div class='h1'>BLACKJACK! " + who + " wins!</div>");
+// 		$(".deal").attr("disabled", "disabled");
+// 	} else if(dealerStay===true && playerStay===true){
+// 		var winner = _.sum(dealerScore) >= _.sum(playerScore) ? "Dealer" : "Player";
+// 		$target.append("<div class='h1'>Both players stay... " + winner + " wins!</div>");
+// 		$(".deal").attr("disabled", "disabled");
+// 	} else {}
+// }
 
 
 function getJSON(url, cb) {
