@@ -1,11 +1,11 @@
-var API_URL = "http://deckofcardsapi.com/api/shuffle/?deck_count=";
+var API_URL  = "http://deckofcardsapi.com/api/shuffle/?deck_count=";
 var DRAW_URL = "http://deckofcardsapi.com/api/draw/";
-var back = "http://fc09.deviantart.net/fs71/f/2010/128/8/4/84e41dc8cec4d2f388ca9c1a96d4de46.jpg";
+var back     = "http://fc09.deviantart.net/fs71/f/2010/128/8/4/84e41dc8cec4d2f388ca9c1a96d4de46.jpg";
 var deck_id;
 
 var $newGame = $(".new-game");
-var $dealer = $(".dealer div");
-var $player = $(".player div");
+var $dealer  = $(".dealer div");
+var $player  = $(".player div");
 
 
 var dealerScore = [];
@@ -181,6 +181,8 @@ function check(){
 	} else if(dealerStay===true && playerStay===true){
 		var winner = sumDealer >= sumPlayer ? "Dealer" : "Player";
  		$target.append("<div class='h1'>Both players stay... " + winner + " wins!</div>");
+	} else if(playerScore.length === 5){
+		$target.append("<div class='h1'>FIVE CARD CHARLIE! Player wins!</div>");
 	} else{}
 }
 
@@ -189,7 +191,7 @@ function getJSON(url, cb) {
 	JSONP_PROXY = 'https://jsonp.afeld.me/?url=';
 	 // THIS WILL ADD THE CROSS ORIGIN HEADERS
 	var request = new XMLHttpRequest();
-	 
+
 	request.open('GET', JSONP_PROXY + url);
 
 	request.onload = function() {
