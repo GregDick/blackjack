@@ -3,6 +3,7 @@ body{
 }
 .container{
 	background-image: url(/img/blackjack-background.jpg);
+	min-height: 750px;
 }
 
 .new-game, .deal, .dealer-hit, .player-hit, .dealer-stay, .player-stay{
@@ -33,13 +34,21 @@ h1, .h1{
 	color: white;
 }
 
+.text-success{
+	color: limegreen;
+}
+
+.text-danger{
+	color: red;
+}
+
 .card-space{
 	min-height: 135px;
 }
 
 img{
 	float: left;
-	margin: 20px;
+	margin: 20px -30px;
 	max-height: 173px;
 	min-width: 124px;
 	border-radius: 5px;

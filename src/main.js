@@ -15,10 +15,15 @@ var playerStay = false;
 var $dealerScoreBoard = $(".dealer span");
 var num = 0;
 
+
+$(".dealer").hide();
+$(".player").hide();
 /*------functions for button clicks------*/
 $newGame.on('click', function(){
 	newDecks(6);
 	resetGame();
+	$(".dealer").show();
+	$(".player").show();
 });
 
 $(".deal").on('click', function(){
@@ -129,6 +134,14 @@ function addScore(who){
 	var $scoreBoard = $("."+ who +" span");
 	var score = who === "dealer" ? _.sum(dealerScore) : _.sum(playerScore);
 	$scoreBoard.html(score);
+	if(score > 21){
+		color = "text-danger";
+	}else if(score===21){
+		color = "text-success";
+	}else{
+		color = "";
+	}
+	$scoreBoard.attr("class", color);
 }
 
 //checks to see if someone wins or busts
@@ -170,36 +183,6 @@ function check(){
  		$target.append("<div class='h1'>Both players stay... " + winner + " wins!</div>");
 	} else{}
 }
-
-
-
-
-
-// function check(){
-// 	var $target = $(".head");
-// 	var score = who === "dealer" ? dealerScore : playerScore;
-// 	var other = who === "dealer" ? "player" : "dealer";
-// 	if(_.sum(score) > 21){
-// 		$hiddenCard.attr("src", replace);
-// 		//change Ace value 11 to 1
-// 		if(score.indexOf(11)=== -1){
-// 			$target.append("<div class='h1'>" + who + " bust... "+  other +" wins!</div>");
-// 			$(".deal").attr("disabled", "disabled");
-// 		}else{
-// 			var where = score.indexOf(11);
-// 			score.splice(where, 1, 1);
-// 			addScore(who);
-// 			check(who);
-// 		}
-// 	} else if(_.sum(score) === 21){
-// 		$target.append("<div class='h1'>BLACKJACK! " + who + " wins!</div>");
-// 		$(".deal").attr("disabled", "disabled");
-// 	} else if(dealerStay===true && playerStay===true){
-// 		var winner = _.sum(dealerScore) >= _.sum(playerScore) ? "Dealer" : "Player";
-// 		$target.append("<div class='h1'>Both players stay... " + winner + " wins!</div>");
-// 		$(".deal").attr("disabled", "disabled");
-// 	} else {}
-// }
 
 
 function getJSON(url, cb) {
