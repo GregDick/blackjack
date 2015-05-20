@@ -6,11 +6,17 @@ body{
 	min-height: 750px;
 }
 
-.new-game, .deal, .dealer-hit, .player-hit, .dealer-stay, .player-stay{
+.new-game, .deal, .hit, .stay{
 	margin-right: 15px;
 	background: rgba(100, 50, 0, 0.9);
 	color: white;
 	font-size: 1.5em;
+}
+
+.btn:hover{
+  transform: scale(1.1);
+  transition: all .2s ease-in-out;
+  color: white;
 }
 
 
@@ -35,11 +41,15 @@ h1, .h1{
 }
 
 .text-success{
-	color: limegreen;
+	color: #4DFF0B;
 }
 
 .text-danger{
-	color: red;
+	color: #F7000A;
+}
+
+span{
+  margin-left: 10px;
 }
 
 .card-space{
@@ -53,3 +63,18 @@ img{
 	min-width: 124px;
 	border-radius: 5px;
 }
+
+.bet{
+  margin: 0;
+}
+
+.bet h4{
+  text-align: center;
+  color: white;
+  opacity: 0.5;
+  margin-bottom: 50px;
+}
+
+
+
+

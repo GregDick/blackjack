@@ -4,46 +4,72 @@ var back     = "http://fc09.deviantart.net/fs71/f/2010/128/8/4/84e41dc8cec4d2f38
 var deck_id;
 
 var $newGame = $(".new-game");
-var $dealer  = $(".dealer div");
-var $player  = $(".player div");
+var $dealButton = $(".deal");
+var $dealerCardArea  = $(".dealer div");
+var $playerCardArea  = $(".player div");
+var $betArea = $(".bet");
 
 
 var dealerScore = [];
 var playerScore = [];
 var dealerStay = false;
 var playerStay = false;
+var $hit = $(".hit");
+var $stay = $(".stay");
 var $dealerScoreBoard = $(".dealer span");
+var $playerScoreBoard = $(".player span");
 var num = 0;
 
+var cash = 500;
+var bet = 0;
 
-$(".dealer").hide();
-$(".player").hide();
+// --------on page load-----------
+hideStuff();
+
+
 /*------functions for button clicks------*/
+
 $newGame.on('click', function(){
 	newDecks(6);
 	resetGame();
-	$(".dealer").show();
-	$(".player").show();
+  showStuff();
 });
 
-$(".deal").on('click', function(){
+$dealButton.on('click', function(){
 	drawCards(1, "dealer", wat);
 	drawCards(1, "dealer", wat);
 	drawCards(2, "player", check);
-	$(".deal").attr("disabled", "disabled");
+	$dealButton.attr("disabled", "disabled");
+  $(".bet button").attr("disabled", "disabled");
 });
 
-$(".player-hit").on('click', function(){
+$hit.on('click', function(){
 	drawCards(1, "player", check);
 });
 
-$(".player-stay").on('click', function(){
+$stay.on('click', function(){
 	playerStay = true;
-	$dealerScoreBoard.show();
 	$hiddenCard.attr("src", replace);
 	autoDealer();
 });
 
+
+
+// ---------under the hood-----------
+
+//hides stuff
+function hideStuff(){
+  $(".dealer").hide();
+  $(".player").hide();
+  $betArea.hide();
+}
+
+//shows stuff
+function showStuff(){
+  $(".dealer").show();
+  $(".player").show();
+  $betArea.show();
+}
 
 //automates dealer play
 function autoDealer(){
@@ -60,17 +86,21 @@ function wat(){}
 
 //resets game variables
 function resetGame(){
-	$(".deal").removeAttr("disabled");
+	$dealButton.removeAttr("disabled");
+  $(".bet button").removeAttr("disabled");
+  $hit.removeAttr("disabled");
+  $stay.removeAttr("disabled");
 	$(".head div").remove();
-	$dealer.empty();
+	$dealerCardArea.empty();
 	dealerScore.length = 0;
 	dealerStay = false;
 	addScore("dealer");
 	$dealerScoreBoard.hide();
-	$player.empty();
+	$playerCardArea.empty();
 	playerScore.length = 0;
 	playerStay = false;
 	addScore("player");
+	$playerScoreBoard.hide();
 }
 
 //creates new decks
@@ -90,7 +120,6 @@ function drawCards(card_count, who, callback){
 			addHand(who, card);
 			sum(who, card);
 			addScore(who);
-			// check();
 		});
 		callback();
 	});
@@ -154,6 +183,7 @@ function check(){
 		var where = dealerScore.indexOf(11);
 		if(where === -1){
 			$target.append("<div class='h1'>Dealer bust... Player wins!</div>");
+			reveal();
 		}else{
 			dealerScore.splice(where, 1, 1);
  			addScore("dealer");
@@ -164,7 +194,7 @@ function check(){
 		var where = playerScore.indexOf(11);
 		if(where === -1){
 			$target.append("<div class='h1'>Player bust... Dealer wins!</div>");
-			$hiddenCard.attr("src", replace);
+			reveal();
 		}else{
 			playerScore.splice(where, 1, 1);
  			addScore("player");
@@ -172,20 +202,34 @@ function check(){
 	} else if(sumDealer===21 && sumPlayer===21){
 		//add function to check to see who has the realest blackjack
 		$target.append("<div class='h1'>BLACKJACK tie! Dealer wins!</div>");
-		$hiddenCard.attr("src", replace);
+		reveal();
 	} else if(sumPlayer===21){
 		$target.append("<div class='h1'>BLACKJACK! Player wins!</div>");
-		$hiddenCard.attr("src", replace);
+		reveal();
 	} else if(sumDealer===21 && playerStay===true){
 		$target.append("<div class='h1'>BLACKJACK! Dealer wins!</div>");
+		reveal();
 	} else if(dealerStay===true && playerStay===true){
 		var winner = sumDealer >= sumPlayer ? "Dealer" : "Player";
  		$target.append("<div class='h1'>Both players stay... " + winner + " wins!</div>");
+ 		reveal();
 	} else if(playerScore.length === 5){
 		$target.append("<div class='h1'>FIVE CARD CHARLIE! Player wins!</div>");
-	} else{}
+		reveal();
+	} else if(dealerScore.length === 5){
+    $target.append("<div class='h1'>FIVE CARD CHARLIE! Dealer wins!</div>");
+    reveal();
+  } else{}
 }
 
+//shows dealers card and score and disables hit/stay buttons
+function reveal(){
+  $dealerScoreBoard.show();
+  $playerScoreBoard.show();
+  $hiddenCard.attr("src", replace);
+  $hit.attr("disabled", "disabled");
+  $stay.attr("disabled", "disabled");
+}
 
 function getJSON(url, cb) {
 	JSONP_PROXY = 'https://jsonp.afeld.me/?url=';
