@@ -8,6 +8,7 @@ var $dealButton = $(".deal");
 var $dealerCardArea  = $(".dealer div");
 var $playerCardArea  = $(".player div");
 var $betArea = $(".bet");
+var $betButtons = $(".bet-buttons");
 
 
 var dealerScore = [];
@@ -33,6 +34,9 @@ $newGame.on('click', function(){
 	newDecks(6);
 	resetGame();
   showStuff();
+  checkCash();
+  $hit.attr("disabled", "disabled");
+  $stay.attr("disabled", "disabled");
 });
 
 $dealButton.on('click', function(){
@@ -40,7 +44,9 @@ $dealButton.on('click', function(){
 	drawCards(1, "dealer", wat);
 	drawCards(2, "player", check);
 	$dealButton.attr("disabled", "disabled");
-  $(".bet button").attr("disabled", "disabled");
+  $betButtons.attr("disabled", "disabled");
+  $hit.removeAttr("disabled");
+  $stay.removeAttr("disabled");
 });
 
 $hit.on('click', function(){
@@ -53,6 +59,25 @@ $stay.on('click', function(){
 	autoDealer();
 });
 
+$(".plus-hundred").on('click', function(){
+  bet = bet<cash ? bet+100 : bet
+})
+
+$(".plus-ten").on('click', function(){
+  bet = bet<cash ? bet+10 : bet
+})
+
+$(".plus-five").on('click', function(){
+  bet = bet<cash ? bet+5 : bet
+})
+
+$(".clear-bet").on('click', function(){
+  bet = 0;
+})
+
+$betButtons.click(function(){
+  addBetToPage();
+})
 
 
 // ---------under the hood-----------
@@ -69,6 +94,7 @@ function showStuff(){
   $(".dealer").show();
   $(".player").show();
   $betArea.show();
+  addBetToPage();
 }
 
 //automates dealer play
@@ -101,6 +127,7 @@ function resetGame(){
 	playerStay = false;
 	addScore("player");
 	$playerScoreBoard.hide();
+  bet = 0;
 }
 
 //creates new decks
@@ -182,8 +209,9 @@ function check(){
 		//check for ace and convert to 1 if ace is present
 		var where = dealerScore.indexOf(11);
 		if(where === -1){
-			$target.append("<div class='h1'>Dealer bust... Player wins!</div>");
+			$target.append("<div class='h1'>Dealer bust... Player wins! +$"+ bet +"</div>");
 			reveal();
+      cash += bet;
 		}else{
 			dealerScore.splice(where, 1, 1);
  			addScore("dealer");
@@ -193,32 +221,39 @@ function check(){
 		//check for ace and convert to 1 if ace is present
 		var where = playerScore.indexOf(11);
 		if(where === -1){
-			$target.append("<div class='h1'>Player bust... Dealer wins!</div>");
+			$target.append("<div class='h1'>Player bust... Dealer wins! -$"+ bet +"</div>");
 			reveal();
+      cash -= bet;
 		}else{
 			playerScore.splice(where, 1, 1);
  			addScore("player");
 		}
-	} else if(sumDealer===21 && sumPlayer===21){
+	} else if(playerScore.length === 5){
+    $target.append("<div class='h1'>FIVE CARD CHARLIE! Player wins! +$"+ bet +"</div>");
+    reveal();
+    cash += bet;
+  } else if(sumDealer===21 && sumPlayer===21){
 		//add function to check to see who has the realest blackjack
-		$target.append("<div class='h1'>BLACKJACK tie! Dealer wins!</div>");
+		$target.append("<div class='h1'>BLACKJACK tie! Dealer wins! Bet is pushed.</div>");
 		reveal();
 	} else if(sumPlayer===21){
-		$target.append("<div class='h1'>BLACKJACK! Player wins!</div>");
+		$target.append("<div class='h1'>BLACKJACK! Player wins! +$"+ bet +"</div>");
 		reveal();
+    cash += bet;
 	} else if(sumDealer===21 && playerStay===true){
-		$target.append("<div class='h1'>BLACKJACK! Dealer wins!</div>");
+		$target.append("<div class='h1'>BLACKJACK! Dealer wins! -$"+ bet +"</div>");
 		reveal();
+    cash -= bet;
 	} else if(dealerStay===true && playerStay===true){
 		var winner = sumDealer >= sumPlayer ? "Dealer" : "Player";
- 		$target.append("<div class='h1'>Both players stay... " + winner + " wins!</div>");
+    cash = sumDealer >= sumPlayer ? cash-bet : cash+bet;
+    plusMinus = sumDealer >= sumPlayer ? "-" : "+";
+ 		$target.append("<div class='h1'>Both players stay... " + winner + " wins! "+ plusMinus +"$"+ bet +"</div>");
  		reveal();
-	} else if(playerScore.length === 5){
-		$target.append("<div class='h1'>FIVE CARD CHARLIE! Player wins!</div>");
-		reveal();
 	} else if(dealerScore.length === 5){
-    $target.append("<div class='h1'>FIVE CARD CHARLIE! Dealer wins!</div>");
+    $target.append("<div class='h1'>FIVE CARD CHARLIE! Dealer wins! -$"+ bet +"</div>");
     reveal();
+    cash -= bet;
   } else{}
 }
 
@@ -229,6 +264,22 @@ function reveal(){
   $hiddenCard.attr("src", replace);
   $hit.attr("disabled", "disabled");
   $stay.attr("disabled", "disabled");
+}
+
+//adds bet to page
+function addBetToPage(){
+  var $cashSpace = $(".cash-space");
+  var $currentBetSpace = $(".current-bet-space");
+  $cashSpace.text("$"+cash);
+  $currentBetSpace.text("$"+bet);
+}
+
+//check cash
+function checkCash(){
+  var $target = $(".head");
+  if(cash===0){
+    $target.append("<div class='h1'>You have no money! Go home!</div>");
+  }
 }
 
 function getJSON(url, cb) {

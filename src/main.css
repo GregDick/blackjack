@@ -1,5 +1,5 @@
 body{
-	background: rgb(100, 50, 0);
+	background: #422A0F;
 }
 .container{
 	background-image: url(/img/blackjack-background.jpg);
@@ -8,7 +8,7 @@ body{
 
 .new-game, .deal, .hit, .stay{
 	margin-right: 15px;
-	background: rgba(100, 50, 0, 0.9);
+	background: #422A0F;
 	color: white;
 	font-size: 1.5em;
 }
@@ -72,7 +72,7 @@ img{
   text-align: center;
   color: white;
   opacity: 0.5;
-  margin-bottom: 50px;
+  margin-bottom: 10px;
 }
 
 
