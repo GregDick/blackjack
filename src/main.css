@@ -2,11 +2,11 @@ body{
 	background: #422A0F;
 }
 .container{
-	background-image: url(/img/blackjack-background.jpg);
+	background-image: url(img/blackjack-background.jpg);
 	min-height: 750px;
 }
 
-.new-game, .deal, .hit, .stay{
+.new-game, .deal, .hit, .stay, .double-down{
 	margin-right: 15px;
 	background: #422A0F;
 	color: white;
