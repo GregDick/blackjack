@@ -1,0 +1,57 @@
+<!doctype html>
+<html class="no-js" lang="">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>|Blackjack|</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.4/css/bootstrap.min.css">
+    <link rel="stylesheet" href="main.css">
+  </head>
+  <body>
+    <div class="container">
+      <div class="rules col-md-4">
+        <h4>DEALER HITS ON 16</h4>
+        <h4>STAYS ON 17</h4>
+      </div>
+      <div class="head col-md-4">
+        <h1 >B L A C K J A C K </h1>
+        <button class="new-game btn btn-block">New Game</button>
+        <button class="deal btn btn-block" disabled="disabled">Deal</button>
+      </div>
+      <div class="rules col-md-4">
+        <h4>TIE GOES TO THE DEALER</h4>
+      </div>
+      <div class="dealer col-md-8 col-md-offset-2">
+        <h2>Dealer
+          <span class=""></span>
+        </h2>
+        <div class="card-space"></div>
+      </div>
+      <div class="player col-md-8 col-md-offset-2">
+        <h2>Player
+          <span class=""></span>
+        </h2>
+        <button class="btn hit">Hit</button>
+        <button class="btn stay">Stay</button>
+        <button class="btn double-down">Double Down</button>
+        <div class="card-space"></div>
+      </div>
+      <div class="bet col-md-2">
+        <h4>CASH MONEY</h4>
+        <h4 class="cash-space"></h4>
+        <h4>CURRENT BET</h4>
+        <h4 class="current-bet-space"></h4>
+        <button class="bet-buttons btn btn-block plus-hundred">+100</button>
+        <button class="bet-buttons btn btn-block plus-ten">+10</button>
+        <button class="bet-buttons btn btn-block plus-five">+5</button>
+        <button class="bet-buttons btn btn-block clear-bet">CLEAR BET</button>
+      </div>
+      <div class="stats">
+        <!-- Append wins losses and blackjacks -->
+      </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/3.8.0/lodash.min.js"></script>
+    <script src="main.js"></script>
+  </body>

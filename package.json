@@ -18,9 +18,7 @@
   "homepage": "https://github.com/GregDick/blackjack",
   "devDependencies": {
     "bootstrap": "^3.3.4",
-    "jade": "git://github.com/jadejs/jade.git",
     "jquery": "^2.1.4",
-    "lodash": "^3.8.0",
-    "node-sass": "^3.1.0"
+    "lodash": "^3.8.0"
   }
 }

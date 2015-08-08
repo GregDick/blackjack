@@ -306,6 +306,7 @@ function reveal(){
   $hiddenCard.attr("src", replace);
   $hit.attr("disabled", "disabled");
   $stay.attr("disabled", "disabled");
+  $doubleDown.attr("disabled", "disabled");
 }
 
 //adds bet to page
