@@ -1,8 +1,12 @@
 # blackjack
 An application to play blackjack. Built using bootstrap, jquery, and lodash.
 
-"npm install" to install dependencies.
+To install dependencies:
+```
+npm install;
+```
 
-"npm run server" to host locally on a random port.
-
-Bet before dealing, or play without bets!
+To host locally on a random port:
+```
+npm run server;
+```
